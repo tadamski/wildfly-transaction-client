@@ -40,14 +40,15 @@ import org.wildfly.transaction.client._private.Log;
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
 public final class ContextTransactionManager implements TransactionManager {
-    static final ContextTransactionManager INSTANCE = new ContextTransactionManager();
-
     private static final AtomicInteger defaultTimeoutRef = new AtomicInteger(LocalTransactionContext.DEFAULT_TXN_TIMEOUT);
     private static final TransactionPermission SET_TIMEOUT_PERMISSION = TransactionPermission.forName("setGlobalDefaultTransactionTimeout");
+
+    static final ContextTransactionManager INSTANCE = new ContextTransactionManager();
 
     final ThreadLocal<State> stateRef = ThreadLocal.withInitial(State::new);
 
     private ContextTransactionManager() {
+        TransactionClientXmlParser.loadConfiguration();
     }
 
     public void begin() throws NotSupportedException, SystemException {
